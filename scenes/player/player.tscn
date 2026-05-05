@@ -1,15 +1,24 @@
 [gd_scene format=3 uid="uid://dxv25dhttcuej"]
 
 [ext_resource type="Script" uid="uid://dlekc1yb5h17t" path="res://scripts/player/Player.cs" id="1_8afob"]
+[ext_resource type="Texture2D" uid="uid://dxn20djj3y5mu" path="res://assets/sprites/tilemap.png" id="2_dovo2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x7p2l"]
+radius = 7.0
+height = 20.0
 
 [node name="Player" type="CharacterBody2D" unique_id=499806727]
 script = ExtResource("1_8afob")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1235556718]
+texture = ExtResource("2_dovo2")
+hframes = 12
+vframes = 11
+frame = 85
+region_rect = Rect2(17, 119, 16, 16)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1361424246]
+position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_x7p2l")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1621954248]
