@@ -1,0 +1,27 @@
+# Godot 4 — ficheiros gerados automaticamente (não precisam de versão)
+.godot/
+*.uid
+
+# Importações de assets (o Godot regenera-as)
+.import/
+
+# Exportações do projeto
+export/
+export_presets.cfg
+
+# Mono / C# — ficheiros de build
+.mono/
+data_*/
+mono_crash.*.json
+*.csproj.user
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# VS Code / Rider (IDEs comuns com Godot C#)
+.vscode/
+.idea/
+*.suo
+*.user
