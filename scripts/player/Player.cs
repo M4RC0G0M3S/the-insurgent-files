@@ -39,10 +39,10 @@ public partial class Player : CharacterBody2D
     {
         // Input.GetVector lê WASD ou setas — devolve Vector2 normalizado
         // Normalizado significa que andar na diagonal não é mais rápido
-        Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+        Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
         // Sprint com Shift
-        float speed = Input.IsActionPressed("ui_text_submit") ? SprintSpeed : MoveSpeed;
+        float speed = Input.IsActionPressed("sprint") ? SprintSpeed : MoveSpeed;
 
         // Velocity é a propriedade do CharacterBody2D
         // MoveAndSlide() aplica o movimento e resolve colisões automaticamente
