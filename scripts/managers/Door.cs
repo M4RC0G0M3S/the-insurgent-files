@@ -1,45 +1,96 @@
 using Godot;
+using System;
 
 // Door.cs — Script da porta
 // Nó raiz: StaticBody2D
-// Responsável por: abrir/fechar porta quando o jogador prime E
+// Responsável por: abrir/fechar porta e transição entre salas
 
 public partial class Door : StaticBody2D
 {
-    // Frames do tileset para cada estado da porta
-    [Export] public int FrameFechada = 45;  // sprite porta fechada
-    [Export] public int FrameAberta = 21;   // sprite porta aberta
+    [Export] public int FrameFechada = 21;
+    [Export] public int FrameAberta = 45;
 
-    // Referências aos nós filhos
+    // Se tiver caminho definido, esta porta leva a outra sala
+    // Deixa vazio se for uma porta normal sem transição
+    [Export] public string TargetScene = "";
+
+    // Posição onde o player aparece na nova sala
+    [Export] public Vector2 SpawnPosition = Vector2.Zero;
+
     private Sprite2D _sprite;
     private CollisionShape2D _collision;
-
-    // Estado atual da porta
     private bool _estaAberta = false;
-
-    // O jogador está perto o suficiente para interagir?
     private bool _jogadorPerto = false;
 
     public override void _Ready()
     {
-        // GetNode busca um nó filho pelo nome
         _sprite = GetNode<Sprite2D>("Sprite2D");
         _collision = GetNode<CollisionShape2D>("CollisionShape2D");
 
-        // Liga os sinais do Area2D
-        // Sinais são eventos — "alguém entrou na área", "alguém saiu"
         Area2D area = GetNode<Area2D>("Area2D");
         area.BodyEntered += OnBodyEntered;
         area.BodyExited += OnBodyExited;
     }
 
-    public override void _Input(InputEvent @event)
+    public override void _Process(double delta)
     {
-        // Só abre/fecha se o jogador estiver perto E premir E
-        if (_jogadorPerto && @event.IsActionPressed("interact"))
+        if (_jogadorPerto && Input.IsActionJustPressed("interact"))
         {
             ToggleDoor();
+
+            if (_estaAberta && !string.IsNullOrWhiteSpace(TargetScene))
+            {
+                TryChangeScene();
+            }
         }
+    }
+
+    private void TryChangeScene()
+    {
+        string scenePath = ResolveScenePath(TargetScene);
+
+        if (!ResourceLoader.Exists(scenePath))
+        {
+            GD.PrintErr("Cena de destino nao encontrada: ", scenePath, " | TargetScene: ", TargetScene);
+            return;
+        }
+
+        GD.Print("A mudar para: ", scenePath);
+        TransitionData.SpawnPosition = SpawnPosition;
+
+        Error err = GetTree().ChangeSceneToFile(scenePath);
+        if (err != Error.Ok)
+        {
+            GD.PrintErr("Falha ao mudar de cena: ", err);
+        }
+    }
+
+    private string ResolveScenePath(string target)
+    {
+        string trimmed = target.Trim();
+        if (trimmed.StartsWith("res://", StringComparison.Ordinal))
+        {
+            return trimmed;
+        }
+
+        if (!trimmed.EndsWith(".tscn", StringComparison.OrdinalIgnoreCase))
+        {
+            trimmed += ".tscn";
+        }
+
+        string levelsPath = "res://scenes/levels/" + trimmed;
+        if (ResourceLoader.Exists(levelsPath))
+        {
+            return levelsPath;
+        }
+
+        string rootPath = "res://" + trimmed;
+        if (ResourceLoader.Exists(rootPath))
+        {
+            return rootPath;
+        }
+
+        return levelsPath;
     }
 
     private void ToggleDoor()
@@ -48,36 +99,37 @@ public partial class Door : StaticBody2D
 
         if (_estaAberta)
         {
-            // Abre a porta — muda sprite e desativa colisão
             _sprite.Frame = FrameAberta;
             _collision.Disabled = true;
             GD.Print("Porta aberta!");
         }
         else
         {
-            // Fecha a porta — muda sprite e ativa colisão
             _sprite.Frame = FrameFechada;
             _collision.Disabled = false;
             GD.Print("Porta fechada!");
         }
     }
 
-    // Chamado quando um corpo entra na Area2D
     private void OnBodyEntered(Node2D body)
     {
-        if (body.Name == "Player")
+        if (IsPlayer(body))
         {
             _jogadorPerto = true;
             GD.Print("Perto da porta — prime E para interagir");
         }
     }
 
-    // Chamado quando um corpo sai da Area2D
     private void OnBodyExited(Node2D body)
     {
-        if (body.Name == "Player")
+        if (IsPlayer(body))
         {
             _jogadorPerto = false;
         }
+    }
+
+    private bool IsPlayer(Node2D body)
+    {
+        return body.IsInGroup("Player") || body is Player;
     }
 }

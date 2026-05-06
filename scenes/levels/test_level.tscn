@@ -183,6 +183,8 @@ layer_1/tile_data = PackedInt32Array(-393233, 262145, 3, -327697, 262145, 3, -26
 
 [node name="Door" parent="." unique_id=174827484 instance=ExtResource("3_fr1um")]
 position = Vector2(-158, -116)
+TargetScene = "res://scenes/levels/test_level_2.tscn"
 
 [node name="Door2" parent="." unique_id=1735022139 instance=ExtResource("3_fr1um")]
 position = Vector2(370, -116)
+TargetScene = "res://scenes/levels/test_level_2.tscn"
