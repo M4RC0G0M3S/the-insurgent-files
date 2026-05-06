@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://btptcplsp7t84"]
+
+[ext_resource type="Script" uid="uid://dirw20nprcgcd" path="res://scripts/managers/Door.cs" id="1_wdsje"]
+[ext_resource type="Texture2D" uid="uid://dxn20djj3y5mu" path="res://assets/sprites/tilemap.png" id="2_sw5t0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_els8d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3gses"]
+size = Vector2(30, 30)
+
+[node name="Door" type="StaticBody2D" unique_id=174827484]
+script = ExtResource("1_wdsje")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1001927716]
+texture = ExtResource("2_sw5t0")
+hframes = 12
+vframes = 11
+frame = 45
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=150705862]
+shape = SubResource("RectangleShape2D_els8d")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=704006004]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=584615315]
+shape = SubResource("RectangleShape2D_3gses")
