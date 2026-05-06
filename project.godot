@@ -15,6 +15,10 @@ run/main_scene="uid://b1f1ury1f6u16"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/mode=4
+
 [dotnet]
 
 project/assembly_name="TheInsurgentFiles"
