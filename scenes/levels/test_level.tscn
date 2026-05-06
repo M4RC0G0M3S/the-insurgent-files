@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dxv25dhttcuej" path="res://scenes/player/player.tscn" id="1_jbqir"]
 [ext_resource type="Texture2D" uid="uid://dxn20djj3y5mu" path="res://assets/sprites/tilemap.png" id="2_yautc"]
 [ext_resource type="PackedScene" uid="uid://btptcplsp7t84" path="res://scenes/levels/door.tscn" id="3_fr1um"]
+[ext_resource type="Script" uid="uid://777q4txk1mu7" path="res://scripts/managers/AmbientLight.cs" id="4_v45ci"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yautc"]
 size = Vector2(500, 20)
@@ -188,3 +189,7 @@ TargetScene = "res://scenes/levels/test_level_2.tscn"
 [node name="Door2" parent="." unique_id=1735022139 instance=ExtResource("3_fr1um")]
 position = Vector2(370, -116)
 TargetScene = "res://scenes/levels/test_level_2.tscn"
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1944348802]
+script = ExtResource("4_v45ci")
+AmbientColor = Color(0.14901961, 0.14901961, 0.2, 1)

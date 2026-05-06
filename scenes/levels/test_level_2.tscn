@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dxn20djj3y5mu" path="res://assets/sprites/tilemap.png" id="2_goahl"]
 [ext_resource type="PackedScene" uid="uid://btptcplsp7t84" path="res://scenes/levels/door.tscn" id="3_goahl"]
 [ext_resource type="PackedScene" uid="uid://dxv25dhttcuej" path="res://scenes/player/player.tscn" id="4_722hl"]
+[ext_resource type="Script" uid="uid://777q4txk1mu7" path="res://scripts/managers/AmbientLight.cs" id="5_cxraw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_722hl"]
 texture = ExtResource("2_goahl")
@@ -162,3 +163,7 @@ position = Vector2(-184, 8)
 TargetScene = "res://scenes/levels/test_level.tscn"
 
 [node name="Player" parent="." unique_id=499806727 instance=ExtResource("4_722hl")]
+position = Vector2(1, 4)
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1738592839]
+script = ExtResource("5_cxraw")
