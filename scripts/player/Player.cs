@@ -79,4 +79,12 @@ public partial class Player : CharacterBody2D
         GD.Print("Player morreu.");
         // Vamos expandir isto na F3
     }
+	public void SetCameraLimits(int left, int right, int top, int bottom)
+	{
+		Camera2D camera = GetNode<Camera2D>("Camera2D");
+		camera.LimitLeft = left;
+		camera.LimitRight = right;
+		camera.LimitTop = top;
+		camera.LimitBottom = bottom;
+	}
 }
