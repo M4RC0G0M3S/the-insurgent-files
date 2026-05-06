@@ -6,19 +6,14 @@ using Godot;
 
 public partial class Player : CharacterBody2D
 {
-    // [Export] torna a variável editável no Inspector do Godot
-    // Assim podes mudar os valores sem tocar no código
     [Export] public float MoveSpeed = 150f;
     [Export] public float SprintSpeed = 280f;
     [Export] public int MaxHP = 100;
     [Export] public int MaxArmor = 50;
 
-    // Variáveis privadas — só usadas dentro deste script
     private int _currentHP;
     private int _currentArmor;
 
-    // _Ready() é chamado UMA VEZ quando a cena carrega
-    // É aqui que inicializamos os valores de HP e Armor
     public override void _Ready()
     {
         _currentHP = MaxHP;
@@ -26,9 +21,6 @@ public partial class Player : CharacterBody2D
         GD.Print("Player iniciado | HP: ", _currentHP, " | Armor: ", _currentArmor);
     }
 
-    // _PhysicsProcess() é chamado 60 vezes por segundo
-    // Tudo o que seja movimento vai sempre aqui
-    // 'delta' = tempo desde o último frame (garante movimento suave)
     public override void _PhysicsProcess(double delta)
     {
         HandleMovement();
@@ -37,28 +29,32 @@ public partial class Player : CharacterBody2D
 
     private void HandleMovement()
     {
-        // Input.GetVector lê WASD ou setas — devolve Vector2 normalizado
-        // Normalizado significa que andar na diagonal não é mais rápido
         Vector2 direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-
-        // Sprint com Shift
         float speed = Input.IsActionPressed("sprint") ? SprintSpeed : MoveSpeed;
-
-        // Velocity é a propriedade do CharacterBody2D
-        // MoveAndSlide() aplica o movimento e resolve colisões automaticamente
         Velocity = direction * speed;
         MoveAndSlide();
     }
 
     private void HandleRotation()
     {
-        // O jogador roda para apontar sempre para o rato
-        // GetGlobalMousePosition() devolve a posição do rato no mundo do jogo
-        LookAt(GetGlobalMousePosition());
+        Vector2 mousePos = GetGlobalMousePosition();
+        Sprite2D sprite = GetNode<Sprite2D>("Sprite2D");
+
+        if (mousePos.X < GlobalPosition.X)
+        {
+            // Rato à esquerda — flipa o sprite e corrige a rotação
+            sprite.FlipH = true;
+            LookAt(mousePos);
+            Rotation += Mathf.Pi; // adiciona 180° para compensar o flip
+        }
+        else
+        {
+            // Rato à direita — comportamento normal
+            sprite.FlipH = false;
+            LookAt(mousePos);
+        }
     }
 
-    // Chamado quando o jogador recebe dano
-    // O Armor absorve primeiro, depois o HP
     public void TakeDamage(int damage)
     {
         if (_currentArmor > 0)
@@ -77,14 +73,14 @@ public partial class Player : CharacterBody2D
     private void Die()
     {
         GD.Print("Player morreu.");
-        // Vamos expandir isto na F3
     }
-	public void SetCameraLimits(int left, int right, int top, int bottom)
-	{
-		Camera2D camera = GetNode<Camera2D>("Camera2D");
-		camera.LimitLeft = left;
-		camera.LimitRight = right;
-		camera.LimitTop = top;
-		camera.LimitBottom = bottom;
-	}
+
+    public void SetCameraLimits(int left, int right, int top, int bottom)
+    {
+        Camera2D camera = GetNode<Camera2D>("Camera2D");
+        camera.LimitLeft = left;
+        camera.LimitRight = right;
+        camera.LimitTop = top;
+        camera.LimitBottom = bottom;
+    }
 }
