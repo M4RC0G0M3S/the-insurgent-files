@@ -4,7 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://dxn20djj3y5mu" path="res://assets/sprites/tilemap.png" id="2_goahl"]
 [ext_resource type="PackedScene" uid="uid://btptcplsp7t84" path="res://scenes/levels/door.tscn" id="3_goahl"]
 [ext_resource type="PackedScene" uid="uid://dxv25dhttcuej" path="res://scenes/player/player.tscn" id="4_722hl"]
-[ext_resource type="Script" uid="uid://777q4txk1mu7" path="res://scripts/managers/AmbientLight.cs" id="5_cxraw"]
+[ext_resource type="Script" path="res://scripts/managers/AmbientLight.cs" id="5_cxraw"]
+[ext_resource type="PackedScene" uid="uid://v2ifceoehss6" path="res://scenes/ui/hud.tscn" id="6_gwqs1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_722hl"]
 texture = ExtResource("2_goahl")
@@ -167,3 +168,5 @@ position = Vector2(1, 4)
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1738592839]
 script = ExtResource("5_cxraw")
+
+[node name="CanvasLayer" parent="." unique_id=165082269 instance=ExtResource("6_gwqs1")]

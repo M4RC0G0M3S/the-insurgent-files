@@ -11,20 +11,30 @@ public partial class Player : CharacterBody2D
     [Export] public int MaxHP = 100;
     [Export] public int MaxArmor = 50;
 
-    private int _currentHP;
-    private int _currentArmor;
+    public int CurrentHP    { get; private set; }
+    public int CurrentArmor { get; private set; }
 
     public override void _Ready()
     {
-        _currentHP = MaxHP;
-        _currentArmor = MaxArmor;
-        GD.Print("Player iniciado | HP: ", _currentHP, " | Armor: ", _currentArmor);
+        // Se TransitionData tem valores guardados, usa-os
+        // Senão começa com valores máximos (primeira vez que o jogo corre)
+        CurrentHP    = TransitionData.CurrentHP    == -1 ? MaxHP    : TransitionData.CurrentHP;
+        CurrentArmor = TransitionData.CurrentArmor == -1 ? MaxArmor : TransitionData.CurrentArmor;
+
+        GD.Print("Player iniciado | HP: ", CurrentHP, " | Armor: ", CurrentArmor);
     }
 
     public override void _PhysicsProcess(double delta)
     {
         HandleMovement();
         HandleRotation();
+    }
+
+    public override void _Process(double delta)
+    {
+        // Teste temporário — remove depois
+        if (Input.IsKeyPressed(Key.T))
+            TakeDamage(1);
     }
 
     private void HandleMovement()
@@ -42,14 +52,12 @@ public partial class Player : CharacterBody2D
 
         if (mousePos.X < GlobalPosition.X)
         {
-            // Rato à esquerda — flipa o sprite e corrige a rotação
             sprite.FlipH = true;
             LookAt(mousePos);
-            Rotation += Mathf.Pi; // adiciona 180° para compensar o flip
+            Rotation += Mathf.Pi;
         }
         else
         {
-            // Rato à direita — comportamento normal
             sprite.FlipH = false;
             LookAt(mousePos);
         }
@@ -57,17 +65,22 @@ public partial class Player : CharacterBody2D
 
     public void TakeDamage(int damage)
     {
-        if (_currentArmor > 0)
+        if (CurrentArmor > 0)
         {
-            int absorbed = Mathf.Min(_currentArmor, damage);
-            _currentArmor -= absorbed;
+            int absorbed = Mathf.Min(CurrentArmor, damage);
+            CurrentArmor -= absorbed;
             damage -= absorbed;
         }
 
-        _currentHP = Mathf.Max(_currentHP - damage, 0);
-        GD.Print("Dano! HP: ", _currentHP, " | Armor: ", _currentArmor);
+        CurrentHP = Mathf.Max(CurrentHP - damage, 0);
 
-        if (_currentHP <= 0) Die();
+        // Guarda sempre que o estado muda
+        TransitionData.CurrentHP    = CurrentHP;
+        TransitionData.CurrentArmor = CurrentArmor;
+
+        GD.Print("Dano! HP: ", CurrentHP, " | Armor: ", CurrentArmor);
+
+        if (CurrentHP <= 0) Die();
     }
 
     private void Die()
